@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tata Play Binge - Zee5 Clone</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+body{background:#080010;color:#fff}
+/* Header - Tata Play Style */
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 15px;background:linear-gradient(90deg,#0f0614,#2d0a4e);position:sticky;top:0;z-index:20}
+.logo{font-weight:900;font-size:24px}.logo b{color:#ff0058}
+.nav{display:flex;gap:8px}
+.nav button{padding:6px 14px;border-radius:20px;border:1px solid #555;background:#1a0a2e;color:#fff;font-size:13px}
+.nav button.active{background:#ff0058;border-color:#ff0058}
+/* Player */
+#playerBox{width:100%;background:#000;aspect-ratio:16/9;position:relative}
+#mainPlayer{width:100%;height:100%;border:0}
+#nowTitle{padding:10px 15px;font-weight:bold;background:#10051f}
+/* Category Title */
+.secTitle{padding:15px 15px 5px;font-size:16px;font-weight:bold;display:flex;justify-content:space-between}
+.secTitle span{font-size:12px;color:#ff0058}
+/* Horizontal Slider - Zee5 & Tata Play Style */
+.row{display:flex;gap:12px;overflow-x:auto;padding:10px 15px;scroll-behavior:smooth}
+.row::-webkit-scrollbar{display:none}
+.card{min-width:110px;max-width:110px;cursor:pointer;transition:.2s}
+.card:hover{transform:scale(1.05)}
+.card img{width:100%;height:155px;object-fit:cover;border-radius:10px;border:1px solid #333}
+.card .live{position:absolute;background:red;font-size:9px;padding:2px 5px;border-radius:4px;margin:5px}
+.cardWrap{position:relative}
+.card p{font-size:11px;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">TATA <b>PLAY</b> + ZEE5</div>
+<div class="nav">
+<button class="active" onclick="filterAll('all',this)">All</button>
+<button onclick="filterAll('zee',this)">Zee5</button>
+<button onclick="filterAll('tata',this)">Tata Play</button>
+</div>
+</header>
+
+<div id="playerBox">
+<iframe id="mainPlayer" src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=1" allowfullscreen allow="autoplay"></iframe>
+</div>
+<div id="nowTitle">🔴 LIVE: Star Jalsha HD</div>
+
+<div class="secTitle">Zee5 Originals <span>See All</span></div>
+<div class="row" id="zeeRow"></div>
+
+<div class="secTitle">Tata Play Live Channels <span>See All</span></div>
+<div class="row" id="tataRow"></div>
+
+<div class="secTitle">YouTube Free Live <span>See All</span></div>
+<div class="row" id="ytRow"></div>
+
+<script>
+// ================= JS CODE =================
+// তুমি শুধু এখানে ID পাল্টালেই হবে
+
+const zee5 = [
+{id:"rU2q5gQJ0k0", title:"Zee Bangla HD"},
+{id:"5qap5aO4i9A", title:"Zee TV"},
+{id:"OPf0YbXqDm0", title:"Zee Cinema"},
+{id:"kJQP7kiw5Fk", title:"Zee Action"}
+];
+
+const tata = [
+{id:"jfKfPfyJRdk", title:"Tata Play Star Jalsha"},
+{id:"s6z2X2V0ku0", title:"Tata Play Star Plus"},
+{id:"9bZkp7q19f0", title:"Tata Play Sony"},
+{id:"RgKAFK5djSk", title:"Tata Play Colors"},
+{id:"OPf0YbXqDm0", title:"Tata Play Zee"}
+];
+
+const yt = [
+{id:"6t-MjBazs3o", title:"Jamuna TV Live"},
+{id:"q2pG1v1p1k0", title:"Somoy TV"},
+{id:"jfKfPfyJRdk", title:"News 24"}
+];
+
+function createCards(data, elementId, type){
+const row = document.getElementById(elementId);
+row.innerHTML="";
+data.forEach(v=>{
+let d=document.createElement('div');
+d.className=`card ${type}`;
+d.innerHTML=`<div class="cardWrap"><span class="live">LIVE</span><img src="https://i.ytimg.com/vi/${v.id}/mqdefault.jpg"></div><p>${v.title}</p>`;
+d.onclick=()=>{
+document.getElementById('mainPlayer').src=`https://www.youtube.com/embed/${v.id}?autoplay=1`;
+document.getElementById('nowTitle').innerText="🔴 LIVE: "+v.title;
+window.scrollTo(0,0);
+};
+row.appendChild(d);
+});
+}
+createCards(zee5,'zeeRow','zee');
+createCards(tata,'tataRow','tata');
+createCards(yt,'ytRow','yt');
+
+// Filter Button
+function filterAll(type, btn){
+document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+document.querySelectorAll('.card').forEach(c=>{
+if(type=='all') c.style.display='block';
+else c.style.display=c.classList.contains(type)?'block':'none';
+});
+}
+</script>
+</body>
+</html>
